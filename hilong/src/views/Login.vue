@@ -32,7 +32,7 @@ export default class Login extends Vue {
         loginName: '',
         loginPassword: ''
     }
-                // 表单验证，需要在 el-form-item 元素中增加 prop 属性
+    // 表单验证，需要在 el-form-item 元素中增加 prop 属性
     loginFormRules= {
         loginName: [
             {required: true, message: '账号不可为空', trigger: 'blur'}
