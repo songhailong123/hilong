@@ -1,7 +1,11 @@
 <template>
   <div class="home">
     <div class="home-btn">
-        <el-button type="primary" size="small" class="home-el-btn">新增事务</el-button>
+        <el-button
+        type="primary" 
+        size="small"
+        @click="addTransaction"
+        class="home-el-btn">新增事务</el-button>
         <el-input
             class="home-search"
             placeholder="请输入内容"
@@ -99,6 +103,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import axios from 'axios';
 enum tagStatusText {
     success = 0,
     info = 1,
@@ -158,7 +163,13 @@ export default class Home extends Vue {
             address: '上海市普陀区金沙江路 1516 弄'
         }
     ]
-
+    addTransaction() {
+        axios.get('/api/api').then(function (response) {
+            console.log(response)
+        }).catch(function (error) {
+            console.log(error)
+        })
+    }
     tagType( row:any ) {
         const {status} = row;
         console.log(tagStatusText[1])
