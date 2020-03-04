@@ -71,8 +71,8 @@
                 >
                 <template slot-scope="scope">
                     <el-tag
-                        :type="tagType(scope.row)"
-                        disable-transitions>{{tagText(scope.row)}}</el-tag>
+                        :type="tagType(scope.row.status)"
+                        disable-transitions>{{tagText(scope.row.status)}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -104,12 +104,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios';
-enum tagStatusText {
-    success = 0,
-    info = 1,
-    warning = 2,
-    danger = 3 
-}
+import {tagStatusText, tagText, tagType} from '../config'
 @Component({})
 export default class Home extends Vue {
     input2 = '';
@@ -165,6 +160,14 @@ export default class Home extends Vue {
             address: '上海市普陀区金沙江路 1516 弄'
         }
     ]
+    
+    tagText(status:number) {
+        return tagText(status);
+    }
+
+    tagType(status:number) {
+        return tagType(status)
+    }
     addTransaction() {
         axios.get('/api/api').then(function (response) {
             console.log(response)
@@ -172,16 +175,7 @@ export default class Home extends Vue {
             console.log(error)
         })
     }
-    tagType( row:any ) {
-        const {status} = row;
-        console.log(tagStatusText[1])
-        return tagStatusText[status]
-    }
-    tagText( row:any ) {
-        const {status} = row;
-        const result = ['已完成','已删除','待进行','进行中'];
-        return result[status];
-    }
+
     handleEdit(index: string|number, row: string|number) {
         console.log(index, row);
     }

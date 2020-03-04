@@ -42,6 +42,8 @@ export default class App extends Vue {
 </script>
 <style lang="scss" scoped>
 #app {
+	width: 100%;
+	height: 100%;
   .head{
     border-bottom: 1px solid #e6e6e6;
   }
