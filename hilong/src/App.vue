@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <el-header v-if="showHead()">
+    <el-header v-if="showHead()"
+      class="head"
+    >
         <el-menu
         :default-active="activeIndex2"
         class="el-menu"
@@ -31,7 +33,7 @@ export default class App extends Vue {
 
     @Watch('$route')
     showHead() {
-        return this.$route.name !== 'Login'
+        return this.$route.name !== 'Login' && this.$route.name !== 'NotFound'
     }
     handleSelect(key: string|number, keyPath: string|number) {
         console.log(key, keyPath);
@@ -40,6 +42,9 @@ export default class App extends Vue {
 </script>
 <style lang="scss" scoped>
 #app {
+  .head{
+    border-bottom: 1px solid #e6e6e6;
+  }
   .el-header {
     padding: 0;
     overflow: hidden;

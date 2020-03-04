@@ -15,7 +15,7 @@
     </div>
     <div class="search-content">
         <div>
-            <label >ssss</label>
+            <label class="label">状态:</label>
             <el-select v-model="statusValue" placeholder="请选择">
                 <el-option
                     v-for="item in options"
@@ -26,7 +26,7 @@
             </el-select>
         </div>
         <div class="block">
-            <span class="demonstration">默认</span>
+            <label class="label">日期:</label>
             <el-date-picker
             v-model="dateValue"
             type="date"
@@ -117,22 +117,24 @@ export default class Home extends Vue {
     statusValue = '';
 
     dateValue = '';
-        options=[{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }]
+    options = [
+        {
+          value: '0',
+          label: '已完成'
+        },
+        {
+          value: '1',
+          label: '已删除'
+        },
+        {
+          value: '2',
+          label: '待进行'
+        },
+        {
+          value: '3',
+          label: '进行中'
+        }
+    ]
     tableData = [
         {
             id: 1,
@@ -191,13 +193,21 @@ export default class Home extends Vue {
 <style lang="scss" scoped>
 .home {
     padding: 10px;
-    margin-top:10px;
-    border-top:3px solid #f3f3f3;
+    margin-top:15px;
+    overflow: hidden;
     .search-content {
         width: 100%;
+        padding: 15px 10px 10px; 
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+        .block {
+            margin-left: 30px; 
+        }
+        .label {
+            color: rgba($color: #000000, $alpha: 0.5);
+            margin-right: 10px;
+        }
     }
     .home-btn {
         width: 100%;

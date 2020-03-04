@@ -11,9 +11,9 @@ app.use(bodyParse.json());
 app.use(morgan("combined"));
 
 app.get('/create', async(req, res) => {
-    const { firstName } = req.query;
+    const { userName } = req.query;
     const user = await models.User.create({
-        firstName
+        userName
     });
     res.json({
         message:'success',
