@@ -79,14 +79,14 @@
                 <template slot-scope="scope">
                     <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                    @click="handleDetail(scope.row)">详情</el-button>
                     <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button
                     size="mini"
                     type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -104,7 +104,8 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios';
-import {tagStatusText, tagText, tagType} from '../config'
+import {tagStatusText, tagText, tagType, options} from '../config'
+import Detail from './Detail.vue';
 @Component({})
 export default class Home extends Vue {
     input2 = '';
@@ -112,24 +113,7 @@ export default class Home extends Vue {
     statusValue = '';
 
     dateValue = '';
-    options = [
-        {
-          value: '0',
-          label: '已完成'
-        },
-        {
-          value: '1',
-          label: '已删除'
-        },
-        {
-          value: '2',
-          label: '待进行'
-        },
-        {
-          value: '3',
-          label: '进行中'
-        }
-    ]
+    options = options;
     tableData = [
         {
             id: 1,
@@ -168,6 +152,16 @@ export default class Home extends Vue {
     tagType(status:number) {
         return tagType(status)
     }
+
+    handleDetail({id}:number|any) {
+        this.$router.push({
+            name: 'Detail',
+            query:{
+                id:id
+            }
+        })
+    }
+
     addTransaction() {
         axios.get('/api/api').then(function (response) {
             console.log(response)

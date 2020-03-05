@@ -3,8 +3,8 @@
     <el-header v-if="showHead()"
       class="head"
     >
-        <el-menu
-        :default-active="activeIndex2"
+    <el-menu
+        :default-active="activeIndex"
         class="el-menu"
         mode="horizontal"
         @select="handleSelect"
@@ -12,8 +12,9 @@
         text-color="#409eff"
         active-text-color="#1989fa">
         <el-menu-item >事务管理系统</el-menu-item>
-        <el-menu-item index="2">个人中心</el-menu-item>
-        <el-menu-item index="3" class="head-icon">
+        <el-menu-item index="0">首页</el-menu-item>
+        <el-menu-item index="1">新增事务</el-menu-item>
+        <el-menu-item index="2" class="head-icon">
           <el-avatar icon="el-icon-user-solid"></el-avatar>
         </el-menu-item>
         </el-menu>
@@ -29,14 +30,16 @@ import { Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class App extends Vue {
-    activeIndex2 = '1'
+    activeIndex = '0'
 
     @Watch('$route')
     showHead() {
         return this.$route.name !== 'Login' && this.$route.name !== 'NotFound'
     }
-    handleSelect(key: string|number, keyPath: string|number) {
-        console.log(key, keyPath);
+
+    handleSelect(key: any) {
+        const routeName = ['Home', 'Add', 'Person'];
+        (this as any).$router.push({name: routeName[key]})
     }
 }
 </script>
