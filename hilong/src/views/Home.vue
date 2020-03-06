@@ -159,7 +159,7 @@ export default class Home extends Vue {
             query:{
                 id:id
             }
-        })
+        });
     }
 
     addTransaction() {
@@ -170,8 +170,13 @@ export default class Home extends Vue {
         })
     }
 
-    handleEdit(index: string|number, row: string|number) {
-        console.log(index, row);
+    handleEdit({id}:number|any) {
+        this.$router.push({
+            name: 'Edit',
+            query:{
+                id:id
+            }
+        })
     }
     handleDelete(index: string|number, row: string|number) {
       console.log(index, row);

@@ -2,27 +2,31 @@
   <div class="detail">
     <div class="detail-content">
         <div class="detail-item">
-            <span>ID:&nbsp;&nbsp;&nbsp;{{detailData.id}}</span>
+            <span>ID:</span>
+            <el-input
+            v-model="detailData.id"
+            disabled
+            placeholder="请输入内容"
+            style="margin-left:20px;"
+            class="detail-item-input">
+            </el-input>
         </div>
         <div class="detail-item">
-            <span>日期:&nbsp;&nbsp;&nbsp;
-
+            <span>日期:</span>
             <el-date-picker
+                class="detail-item-input"
                 v-model="detailData.date"
                 type="date"
                 placeholder="选择日期">
             </el-date-picker>
-            </span>
         </div >
         <div class="detail-item">
-            <span>名称:&nbsp;&nbsp;&nbsp;
-                <el-input v-model="detailData.name" placeholder="请输入内容" class="detail-item-input"></el-input>
-            </span>
+            <span>名称: </span>
+            <el-input v-model="detailData.name" placeholder="请输入内容" class="detail-item-input"></el-input>
         </div>
         <div class="detail-item">
-            <span>
-                <span>状态:&nbsp;&nbsp;&nbsp;</span>
-                <el-select v-model="detailData.status" placeholder="请选择">
+                <span>状态:</span>
+                <el-select v-model="detailData.status" placeholder="请选择" class="detail-item-input">
                     <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -30,10 +34,10 @@
                         :value="item.value">
                     </el-option>
                 </el-select>
-            </span>
+            
         </div>
         <div class="detail-item">
-            <p style="margin-right:5px;">描述:</p>
+            <p style="margin-top:5px; align-self:flex-start;">描述:</p>
                 <el-input
                 type="textarea"
                 :rows="8"
@@ -41,6 +45,9 @@
                 placeholder="请输入内容"
                 v-model="detailData.describe">
                 </el-input>
+        </div>
+        <div class="add-btn">
+            <el-button type="primary" size="small">确定修改</el-button>
         </div>
     </div>
 
@@ -76,16 +83,15 @@ export default class Edit extends Vue {
 <style lang="scss" scoped>
 .detail {
     width: 100%;
-    height: 100%;
     background: url('../assets/edit.jpg');
     background-size: cover;
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    padding: 20px 0;
     .detail-content {
         width: 500px;
         display: flex;
-        padding: 20px;
+        padding: 10px;
         background: rgba($color: #ffffff, $alpha: 0.7);
         flex-direction: column;
         align-items: center;
@@ -94,12 +100,18 @@ export default class Edit extends Vue {
             width: 300px;
             display: flex;
             flex-wrap: wrap;
-            align-items: flex-start;
+            align-items: center;
             padding: 10px;
             .detail-item-input{
                 width: 220px;
+                margin-left:5px; 
             }
         }
+    }
+    .add-btn {
+        width: 100%;
+        padding-right: 50px;
+        text-align: right;
     }
 }
 </style>

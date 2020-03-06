@@ -57,7 +57,7 @@ export default class Detail extends Vue {
 .detail {
     width: 100%;
     height: 100%;
-    background: url('../assets/detail.jpg');
+    background: url('../assets/b.jpg');
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -66,7 +66,7 @@ export default class Detail extends Vue {
         width: 500px;
         display: flex;
         padding: 20px;
-        background: rgba($color: #ffffff, $alpha: 0.4);
+        background: rgba($color: #ffffff, $alpha: 0.7);
         flex-direction: column;
         align-items: center;
         color: #696969;
@@ -74,7 +74,6 @@ export default class Detail extends Vue {
             width: 300px;
             display: flex;
             flex-wrap: wrap;
-            justify-content: start;
             padding: 10px;
         }
     }

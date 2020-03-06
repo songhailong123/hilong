@@ -45,6 +45,9 @@
                 v-model="detailData.describe">
                 </el-input>
         </div>
+        <div class="add-btn">
+            <el-button type="primary" size="small">确定添加</el-button>
+        </div>
     </div>
 
   </div>
@@ -79,8 +82,7 @@ export default class Add extends Vue {
 <style lang="scss" scoped>
 .detail {
     width: 100%;
-    height: 100%;
-    background: url('../assets/edit.jpg');
+    background: url('../assets/add.png');
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -104,6 +106,11 @@ export default class Add extends Vue {
                 margin-left:5px; 
             }
         }
+    }
+    .add-btn {
+        width: 100%;
+        padding-right: 50px;
+        text-align: right;
     }
 }
 </style>

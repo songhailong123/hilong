@@ -2,7 +2,7 @@
 module.exports = {
   devServer: {
       // 设置默认端口
-      port: 8081,
+      port: 8080,
       //默认打开浏览器
       open: true,
       // 设置代理
