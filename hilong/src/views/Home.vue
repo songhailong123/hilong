@@ -163,7 +163,7 @@ export default class Home extends Vue {
     }
 
     addTransaction() {
-        axios.get('/api/api').then(function (response) {
+        axios.get('test').then(function (response) {
             console.log(response)
         }).catch(function (error) {
             console.log(error)
