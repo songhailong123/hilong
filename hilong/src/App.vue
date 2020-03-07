@@ -31,7 +31,6 @@ import { Watch } from 'vue-property-decorator'
 @Component({})
 export default class App extends Vue {
     activeIndex = '0'
-
     @Watch('$route')
     showHead() {
         return this.$route.name !== 'Login' && this.$route.name !== 'NotFound'

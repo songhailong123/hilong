@@ -24,15 +24,27 @@ app.all("*",function(req,res,next){
     else
         next();
 })
-
-app.get('/create', async(req, res) => {
-    const { userName } = req.query;
-    const user = await models.User.create({
-        userName
+//查找用户是否已存在
+app.post('/findUser', async(req, res) => {
+    const { userName } = req.body;
+    const user = await models.User.findOne({
+        where:{userName:userName}
     });
     res.json({
         message:'success',
         user
+    })
+})
+
+// 创新用户
+app.post('/createUser', async(req, res) => {
+    const { userName, password} = req.body;
+    const user = await models.User.create({
+        userName:userName,
+        passWord:password
+    });
+    res.json({
+        message:'success',
     })
 })
 
@@ -43,7 +55,6 @@ app.get('/test', (req,res) => {
 });
 
 app.post('/user', (req, res) => {
-   console.log(req.body);
    res.send({
        code:200,
        data:req.body

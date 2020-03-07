@@ -16,7 +16,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="loginSubmit('loginForm')">登录</el-button>
-                <el-button type="primary" @click="onRegit('loginForm')">注册</el-button>
+                <el-button type="primary" @click="onRegit">注册</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -26,8 +26,14 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Form } from "element-ui";
+import { Getter, Action } from 'vuex-class'
+
 @Component({})
 export default class Login extends Vue {
+    @Action('GET_USER') getUser:any;
+
+    @Getter('getUser') userName:any;
+
     loginForm={
         loginName: '',
         loginPassword: ''
@@ -41,16 +47,23 @@ export default class Login extends Vue {
             {required: true, message: '密码不可为空', trigger: 'blur'}
         ]
     }
-     loginSubmit(loginForm:object) {
+    loginSubmit(loginForm:object) {
         // 为表单绑定验证功能
         (this.$refs['loginForm'] as Form).validate((valid:any) => {
             if (valid) {
-                localStorage.setItem('userName',this.loginForm.loginName)
                 this.$router.replace('/');
             } else {
                 return false;
             }
         });
+    }
+
+    async onRegit() {
+        const {loginName,loginPassword} = this.loginForm;
+        const result = this.getUser({loginName});
+        console.log(this.userName)
+
+
     }
 
 }

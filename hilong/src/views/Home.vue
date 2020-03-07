@@ -106,6 +106,7 @@ import Component from 'vue-class-component'
 import axios from 'axios';
 import {tagStatusText, tagText, tagType, options} from '../config'
 import Detail from './Detail.vue';
+
 @Component({})
 export default class Home extends Vue {
     input2 = '';
