@@ -1,39 +1,40 @@
 export enum tagStatusText {
-    success = 0,
-    info = 1,
-    warning = 2,
-    danger = 3 
+    success = 1,
+    info =2,
+    warning = 3,
+    danger = 4 
 }
 export const options = [
     {
-      value: '0',
+      value: 1,
       label: '已完成'
     },
     {
-      value: '1',
+      value: 2,
       label: '已删除'
     },
     {
-      value: '2',
+      value: 3,
       label: '待进行'
     },
     {
-      value: '3',
+      value: 4,
       label: '进行中'
     }
 ]
 
 export interface DetailData {
-    id: number;
     date: string;
     name: string;
     status: number|string;
     describe: string;
 }
+// 状态文字转换
 export const tagText = ( status:number ) => {
-    const result = ['已完成','已删除','待进行','进行中'];
+    const result = ['','已完成','已删除','待进行','进行中'];
     return result[status];
 }
+// 状态类型转换
 export const tagType = ( status:number ) => {
     return tagStatusText[status]
 }

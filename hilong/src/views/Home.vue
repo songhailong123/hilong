@@ -9,14 +9,16 @@
         <el-input
             class="home-search"
             placeholder="请输入内容"
+            @change="handleInput"
+            clearable
             prefix-icon="el-icon-search"
-            v-model="input2">
+            v-model="searchData">
         </el-input>
     </div>
     <div class="search-content">
         <div>
             <label class="label">状态:</label>
-            <el-select v-model="statusValue" placeholder="请选择">
+            <el-select v-model="statusValue"  clearable  @change="handleStatus" placeholder="请选择">
                 <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -29,6 +31,9 @@
             <label class="label">日期:</label>
             <el-date-picker
             v-model="dateValue"
+            @change="handleDate"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd"
             type="date"
             placeholder="选择日期">
             </el-date-picker>
@@ -38,8 +43,9 @@
     <el-container>
         <el-table
             :data="tableData"
+            size='mini'
             :default-sort = "{prop: 'id'}"
-            style="width: 100%;margin-top:20px;border-top:1px solid #EBEEF5;">
+            style="width: 100%;margin-top:10px;border-top:1px solid #EBEEF5;">
             <el-table-column
                 label="ID"
                 prop="id"
@@ -94,8 +100,9 @@
     <el-pagination
         background
         class="pagination"
+        @current-change="handlePage"
         layout="prev, pager, next"
-        :total="1000">
+        :total="page">
     </el-pagination>
   </div>
 </template>
@@ -106,46 +113,39 @@ import Component from 'vue-class-component'
 import axios from 'axios';
 import {tagStatusText, tagText, tagType, options} from '../config'
 import Detail from './Detail.vue';
+import { Getter, Action } from 'vuex-class'
+
 
 @Component({})
 export default class Home extends Vue {
-    input2 = '';
+    @Action('GET_USER') getUser:any;
 
+    @Action('GET_LIST') getList:any;
+
+    @Getter('getList') list:any;
+
+    @Getter('getUser') user:any;
+    
+    searchData = '';
+    page = 0;
     statusValue = '';
 
-    dateValue = '';
+    dateValue = new Date();
     options = options;
-    tableData = [
-        {
-            id: 1,
-            status:1,
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-            id: 2,
-            status:2,
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-            id: 3,
-            status:3,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-            id: 4,
-            status:0,
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-        }
-    ]
+    tableData = [];
     
+    async created() {
+        const userName = localStorage.getItem('user');
+        await this.getUser({userName});
+        const {user} = this.user;
+        if(!user.id){
+            this.$router.push('/login')
+        }
+        await this.getList({page:1});
+        this.tableData = this.list.list.rows;
+        this.page = this.list.list.count;
+    }
+
     tagText(status:number) {
         return tagText(status);
     }
@@ -154,6 +154,8 @@ export default class Home extends Vue {
         return tagType(status)
     }
 
+
+    // 跳转到详情页
     handleDetail({id}:number|any) {
         this.$router.push({
             name: 'Detail',
@@ -163,14 +165,54 @@ export default class Home extends Vue {
         });
     }
 
-    addTransaction() {
-        axios.get('test').then(function (response) {
-            console.log(response)
-        }).catch(function (error) {
-            console.log(error)
-        })
+    // 表格数据
+    async changeTable(params:object,) {
+        await this.getList(params);
+        this.tableData = this.list.list.rows;
+        this.page = this.list.list.count;
+    }
+    
+    // 状态查询
+    handleStatus() {
+        const search = {};
+        this.statusValue&&(search['status'] = Number(this.statusValue));
+        this.dateValue&&(search['date'] = this.dateValue);
+        search['page'] = 1;
+        this.changeTable(search);
     }
 
+    // 输入查询
+    handleInput(){
+        const search = {};
+        this.searchData&&(search['id'] = Number(this.searchData));
+        search['page'] = 1;
+        this.changeTable(search);
+    }
+
+    // 日期查询
+    handleDate() {
+        const search = {};
+        this.statusValue&&(search['status'] = Number(this.statusValue));
+        this.dateValue&&(search['date'] = this.dateValue);
+        search['page'] = 1;
+        this.changeTable(search);
+    }
+
+    // 分页
+    handlePage(currentPage:number|string) {
+        const search = {};
+        this.statusValue&&(search['status'] = this.statusValue);
+        this.dateValue&&(search['date'] = this.dateValue);
+        this.searchData&&(search['id'] = Number(this.searchData));
+        search['page'] = Number(currentPage);
+        this.changeTable(search);
+    }
+    // 跳转到新增页
+    addTransaction() {
+        this.$router.push('/add')
+    }
+    
+    // 跳转到编辑页
     handleEdit({id}:number|any) {
         this.$router.push({
             name: 'Edit',
@@ -179,6 +221,7 @@ export default class Home extends Vue {
             }
         })
     }
+    // 删除
     handleDelete(index: string|number, row: string|number) {
       console.log(index, row);
     }
@@ -187,11 +230,10 @@ export default class Home extends Vue {
 <style lang="scss" scoped>
 .home {
     padding: 10px;
-    margin-top:15px;
     overflow: hidden;
     .search-content {
         width: 100%;
-        padding: 15px 10px 10px; 
+        padding: 10px; 
         display: flex;
         align-items: center;
         flex-wrap: wrap;
@@ -206,7 +248,6 @@ export default class Home extends Vue {
     .home-btn {
         width: 100%;
         overflow: hidden;
-        margin-top:10px; 
         display: flex;
         .home-search{
             margin-left: auto; 

@@ -1,3 +1,4 @@
 export interface RootStateTypes {
-    userName: string|null;
+    user: object;
+    list:object;
   }

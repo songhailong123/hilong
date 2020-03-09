@@ -1,7 +1,8 @@
 import { RootStateTypes } from './interface'
 
 const state:RootStateTypes = {
-    userName: ''
+    user: [],
+    list: []
 }
 
 export default state

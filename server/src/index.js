@@ -27,30 +27,62 @@ app.all("*",function(req,res,next){
 //查找用户是否已存在
 app.post('/findUser', async(req, res) => {
     const { userName } = req.body;
-    const user = await models.User.findOne({
+    const result = await models.User.findOne({
         where:{userName:userName}
     });
+    const data = result ? result :{};
     res.json({
         message:'success',
-        user
+        user:data
     })
+
 })
 
 // 创新用户
-app.post('/createUser', async(req, res) => {
-    const { userName, password} = req.body;
+app.post('/createUser', async (req, res) => {
+    const { userName, passWord} = req.body;
     const user = await models.User.create({
         userName:userName,
-        passWord:password
+        passWord:passWord
     });
     res.json({
         message:'success',
     })
 })
-
-app.get('/test', (req,res) => {
+// 添加列表
+app.get('/addList', async (req,res) => {
+    const detailData = req.query;
+    const user = await models.List.create({
+        ...detailData
+    });
     res.send({
-        msg:'hilong'
+        message:'success',
+        detailData
+    })
+});
+// 查询列表
+app.get('/searchList', async (req,res) => {
+    const {page} = req.query;
+    const where = {};
+    const limit = 10;
+    Object.keys(req.query).forEach(item => {
+        if (item !== 'page'){
+            if(item === 'date'){
+                where[item] = req.query[item];
+            } else {
+                where[item] = Number(req.query[item]);
+            }
+        }
+    });
+    const offset = (page-1)*limit;
+    const list = await models.List.findAndCountAll({
+        where:where,
+        offset,
+        limit
+    });
+    res.send({
+        message:'success',
+        list
     })
 });
 

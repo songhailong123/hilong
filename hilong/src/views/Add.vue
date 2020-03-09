@@ -2,20 +2,13 @@
   <div class="detail">
     <div class="detail-content">
         <div class="detail-item">
-            <span>ID:</span>
-            <el-input
-            v-model="detailData.id"
-            placeholder="请输入内容"
-            style="margin-left:20px;"
-            class="detail-item-input">
-            </el-input>
-        </div>
-        <div class="detail-item">
             <span>日期:</span>
             <el-date-picker
                 class="detail-item-input"
                 v-model="detailData.date"
                 type="date"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd"
                 placeholder="选择日期">
             </el-date-picker>
         </div >
@@ -46,7 +39,7 @@
                 </el-input>
         </div>
         <div class="add-btn">
-            <el-button type="primary" size="small">确定添加</el-button>
+            <el-button type="primary" size="small" @click="handleAdd">确定添加</el-button>
         </div>
     </div>
 
@@ -57,19 +50,19 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { tagText, DetailData, tagType, options} from '../config'
+import axios from 'axios';
 @Component({})
 export default class Add extends Vue {
+    // 状态列表
     options = options;
     detailData: DetailData = {
-        id: 1,
-        date: '2020-03-05',
+        date: '',
         name: '啊嘿啊嘿嘿啊',
         status: '',
         describe: '啊哈哈哈哈哈哈哈哈哈哈哈'
     }
 
     tagText(status:number) {
-        console.log(status)
         return tagText(status);
     }
 
@@ -77,6 +70,12 @@ export default class Add extends Vue {
         return tagType(status)
     }
 
+    handleAdd() {
+        axios.get('addList',{
+            params:this.detailData
+        });
+        // this.$router.push('/');
+    }
 }
 </script>
 <style lang="scss" scoped>

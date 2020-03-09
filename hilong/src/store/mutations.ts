@@ -3,8 +3,11 @@ import { MutationTree  } from 'vuex'
 import * as types from './types';
 
 const mutations: MutationTree<RootStateTypes> = {
-  [types.SET_USER](state: RootStateTypes, pyload: string|null) {
-    state.userName = pyload;
+  [types.SET_USER](state: RootStateTypes, pyload: string|any) {
+    state.user = pyload
+  },
+  [types.SET_LIST](state: RootStateTypes, pyload: string|any) {
+    state.list = pyload
   }
 }
 
