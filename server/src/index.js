@@ -31,7 +31,7 @@ app.post('/findUser', async(req, res) => {
         where:{userName:userName}
     });
     const data = result ? result :{};
-    res.json({
+    res.send({
         message:'success',
         user:data
     })
@@ -85,12 +85,46 @@ app.get('/searchList', async (req,res) => {
         list
     })
 });
+// 查询详情
+app.get('/detail', async (req,res) => {
+    const {id} = req.query;
+    const user = await models.List.findOne({
+        where:{
+            id
+        }
+    });
+    res.send({
+        message:'success',
+        user
+    })
+});
 
-app.post('/user', (req, res) => {
-   res.send({
-       code:200,
-       data:req.body
-   });
+// 更新列表
+app.post('/updateList', async (req, res) => {
+    const {id} = req.body;
+    const list = await models.List.update(
+        req.body,
+        {
+            where:{
+                id
+            }
+    });
+    res.json({
+        message:'success',
+    })
+})
+
+// 删除列表
+app.get('/deleteList', async (req,res) => {
+    const {id} = req.query;
+    const user = await models.List.destroy({
+        where:{
+            id
+        }
+    });
+    res.send({
+        message:'success',
+    })
 });
 
 app.listen(3000, () => {

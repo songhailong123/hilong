@@ -111,7 +111,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios';
-import {tagStatusText, tagText, tagType, options} from '../config'
+import {tagStatusText, tagText, tagType, options,Search} from '../config'
 import Detail from './Detail.vue';
 import { Getter, Action } from 'vuex-class'
 
@@ -122,15 +122,19 @@ export default class Home extends Vue {
 
     @Action('GET_LIST') getList:any;
 
+    @Action('DELETE_LIST') deleteList:any;
+
+
     @Getter('getList') list:any;
 
     @Getter('getUser') user:any;
     
     searchData = '';
     page = 0;
+    pageCount = 1;
     statusValue = '';
 
-    dateValue = new Date();
+    dateValue = '';
     options = options;
     tableData = [];
     
@@ -201,6 +205,7 @@ export default class Home extends Vue {
     // 分页
     handlePage(currentPage:number|string) {
         const search = {};
+        this.pageCount = Number(currentPage);
         this.statusValue&&(search['status'] = this.statusValue);
         this.dateValue&&(search['date'] = this.dateValue);
         this.searchData&&(search['id'] = Number(this.searchData));
@@ -222,8 +227,25 @@ export default class Home extends Vue {
         })
     }
     // 删除
-    handleDelete(index: string|number, row: string|number) {
-      console.log(index, row);
+    handleDelete({id}) {
+        id = (typeof id === 'number') ? id : Number(id);
+        this.$confirm('此操作将永久删除该选项, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(async () => {
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+                await this.deleteList({id});
+                this.handlePage(this.pageCount);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+            });          
+        });
     }
 }
 </script>

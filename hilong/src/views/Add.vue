@@ -51,8 +51,11 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { tagText, DetailData, tagType, options} from '../config'
 import axios from 'axios';
+import { Action } from 'vuex-class';
+
 @Component({})
 export default class Add extends Vue {
+    @Action('ADD_LIST') addList:any;
     // 状态列表
     options = options;
     detailData: DetailData = {
@@ -70,17 +73,20 @@ export default class Add extends Vue {
         return tagType(status)
     }
 
-    handleAdd() {
-        axios.get('addList',{
-            params:this.detailData
+    async handleAdd() {
+        await this.addList(this.detailData)
+        this.$message({
+           message: '恭喜你,添加成功',
+            type: 'success'
         });
-        // this.$router.push('/');
+        this.$router.push('/');
     }
 }
 </script>
 <style lang="scss" scoped>
 .detail {
     width: 100%;
+    height: 100%;
     background: url('../assets/add.png');
     background-size: cover;
     display: flex;

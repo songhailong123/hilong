@@ -8,6 +8,9 @@ const mutations: MutationTree<RootStateTypes> = {
   },
   [types.SET_LIST](state: RootStateTypes, pyload: string|any) {
     state.list = pyload
+  },
+  [types.SET_DETAIL](state: RootStateTypes, pyload: string|any) {
+    state.detail = pyload
   }
 }
 

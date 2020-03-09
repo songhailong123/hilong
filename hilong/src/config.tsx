@@ -4,6 +4,7 @@ export enum tagStatusText {
     warning = 3,
     danger = 4 
 }
+
 export const options = [
     {
       value: 1,
@@ -24,6 +25,7 @@ export const options = [
 ]
 
 export interface DetailData {
+    id?:number|string;
     date: string;
     name: string;
     status: number|string;

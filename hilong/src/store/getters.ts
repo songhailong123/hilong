@@ -7,6 +7,9 @@ const getters: GetterTree<RootStateTypes, any> = {
     },
     getList:(state: RootStateTypes) => {
         return state.list;
+    },
+    getDetail:(state: RootStateTypes) => {
+        return state.detail;
     }
 }
 

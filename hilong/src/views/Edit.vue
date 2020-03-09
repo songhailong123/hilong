@@ -17,6 +17,8 @@
                 class="detail-item-input"
                 v-model="detailData.date"
                 type="date"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd"
                 placeholder="选择日期">
             </el-date-picker>
         </div >
@@ -47,7 +49,7 @@
                 </el-input>
         </div>
         <div class="add-btn">
-            <el-button type="primary" size="small">确定修改</el-button>
+            <el-button type="primary" size="small" @click="handleEdit">确定修改</el-button>
         </div>
     </div>
 
@@ -58,24 +60,51 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { tagText, DetailData, tagType, options} from '../config'
+import { Getter, Action } from 'vuex-class'
+
 @Component({})
 export default class Edit extends Vue {
+    @Action('GET_DETAIL') getDetail:any;
+
+    @Action('UPDATE_LIST') update:any;
+
+    @Getter('getDetail') detail:any;
+
     options = options;
+
     detailData: DetailData = {
-        id: 1,
-        date: '2020-03-05',
-        name: '啊嘿啊嘿嘿啊',
-        status: '',
-        describe: '啊哈哈哈哈哈哈哈哈哈哈哈'
+        id: 0,
+        date: '',
+        name: '',
+        status: 0,
+        describe: ''
     }
 
     tagText(status:number) {
-        console.log(status)
         return tagText(status);
     }
 
     tagType(status:number) {
         return tagType(status)
+    }
+
+    async mounted() {
+        await  this.getDetail(this.$route.query);
+        const {user} = this.detail;
+        Object.keys(this.detailData).forEach(item => {
+            item === 'status' 
+                ? this.detailData[item] = Number(user[item])
+                :this.detailData[item] = user[item]
+        });
+    }
+
+    async handleEdit(){
+        await this.update(this.detailData);
+        this.$message({
+           message: '恭喜你，修改成功',
+            type: 'success'
+        });
+        this.$router.push('/');
     }
 
 }

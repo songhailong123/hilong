@@ -32,23 +32,37 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { tagText, DetailData, tagType} from '../config'
+import { Getter, Action } from 'vuex-class'
+
 @Component({})
 export default class Detail extends Vue {
+    @Action('GET_DETAIL') getDetail:any;
+
+    @Getter('getDetail') detail:any;
+
     detailData: DetailData = {
-        id: 1,
-        date: '2020-03-05',
-        name: '啊嘿啊嘿嘿啊',
+        id: 0,
+        date: '',
+        name: '',
         status: 0,
-        describe: '啊哈哈哈哈哈哈哈哈哈哈哈'
+        describe: ''
     }
 
+
     tagText(status:number) {
-        console.log(status)
         return tagText(status);
     }
 
     tagType(status:number) {
         return tagType(status)
+    }
+    
+    async mounted() {
+        await  this.getDetail(this.$route.query);
+        const {user} = this.detail;
+        Object.keys(this.detailData).forEach(item => {
+            this.detailData[item] = user[item]
+        });
     }
 
 }
