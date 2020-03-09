@@ -9,7 +9,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 
 @Component({})
-export default class demo extends Vue {
+export default class Person extends Vue {
 }
 </script>
 <style lang="scss" scoped>

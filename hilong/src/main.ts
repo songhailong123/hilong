@@ -3,9 +3,21 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./plugins/element.js";
+import Component from 'vue-class-component';
+import axios from 'axios';
+import Router from 'vue-router'
 
 Vue.config.productionTip = false;
-
+axios.defaults.baseURL = 'http://localhost:3000/'
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return (routerPush).call(this, location).catch((error)=> error)
+}
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate'     
+ ])
 new Vue({
   router,
   store,

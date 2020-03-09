@@ -1,18 +1,24 @@
 <template>
   <div class="home">
     <div class="home-btn">
-        <el-button type="primary" size="small" class="home-el-btn">新增事务</el-button>
+        <el-button
+        type="primary" 
+        size="small"
+        @click="addTransaction"
+        class="home-el-btn">新增事务</el-button>
         <el-input
             class="home-search"
             placeholder="请输入内容"
+            @change="handleInput"
+            clearable
             prefix-icon="el-icon-search"
-            v-model="input2">
+            v-model="searchData">
         </el-input>
     </div>
     <div class="search-content">
         <div>
-            <label >ssss</label>
-            <el-select v-model="statusValue" placeholder="请选择">
+            <label class="label">状态:</label>
+            <el-select v-model="statusValue"  clearable  @change="handleStatus" placeholder="请选择">
                 <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -22,9 +28,12 @@
             </el-select>
         </div>
         <div class="block">
-            <span class="demonstration">默认</span>
+            <label class="label">日期:</label>
             <el-date-picker
             v-model="dateValue"
+            @change="handleDate"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd"
             type="date"
             placeholder="选择日期">
             </el-date-picker>
@@ -34,8 +43,9 @@
     <el-container>
         <el-table
             :data="tableData"
+            size='mini'
             :default-sort = "{prop: 'id'}"
-            style="width: 100%;margin-top:20px;border-top:1px solid #EBEEF5;">
+            style="width: 100%;margin-top:10px;border-top:1px solid #EBEEF5;">
             <el-table-column
                 label="ID"
                 prop="id"
@@ -67,22 +77,22 @@
                 >
                 <template slot-scope="scope">
                     <el-tag
-                        :type="tagType(scope.row)"
-                        disable-transitions>{{tagText(scope.row)}}</el-tag>
+                        :type="tagType(scope.row.status)"
+                        disable-transitions>{{tagText(scope.row.status)}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                    @click="handleDetail(scope.row)">详情</el-button>
                     <el-button
                     size="mini"
-                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button
                     size="mini"
                     type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -90,8 +100,9 @@
     <el-pagination
         background
         class="pagination"
+        @current-change="handlePage"
         layout="prev, pager, next"
-        :total="1000">
+        :total="page">
     </el-pagination>
   </div>
 </template>
@@ -99,99 +110,166 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-enum tagStatusText {
-    success = 0,
-    info = 1,
-    warning = 2,
-    danger = 3 
-}
+import axios from 'axios';
+import {tagStatusText, tagText, tagType, options,Search} from '../config'
+import Detail from './Detail.vue';
+import { Getter, Action } from 'vuex-class'
+
+
 @Component({})
 export default class Home extends Vue {
-    input2 = '';
+    @Action('GET_USER') getUser:any;
 
+    @Action('GET_LIST') getList:any;
+
+    @Action('DELETE_LIST') deleteList:any;
+
+
+    @Getter('getList') list:any;
+
+    @Getter('getUser') user:any;
+    
+    searchData = '';
+    page = 0;
+    pageCount = 1;
     statusValue = '';
 
     dateValue = '';
-        options=[{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }]
-    tableData = [
-        {
-            id: 1,
-            status:1,
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-            id: 2,
-            status:2,
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-            id: 3,
-            status:3,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-            id: 4,
-            status:0,
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
+    options = options;
+    tableData = [];
+    
+    async created() {
+        const userName = localStorage.getItem('user');
+        await this.getUser({userName});
+        const {user} = this.user;
+        if(!user.id){
+            this.$router.push('/login')
         }
-    ]
+        await this.getList({page:1});
+        this.tableData = this.list.list.rows;
+        this.page = this.list.list.count;
+    }
 
-    tagType( row:any ) {
-        const {status} = row;
-        console.log(tagStatusText[1])
-        return tagStatusText[status]
+    tagText(status:number) {
+        return tagText(status);
     }
-    tagText( row:any ) {
-        const {status} = row;
-        const result = ['已完成','已删除','待进行','进行中'];
-        return result[status];
+
+    tagType(status:number) {
+        return tagType(status)
     }
-    handleEdit(index: string|number, row: string|number) {
-        console.log(index, row);
+
+
+    // 跳转到详情页
+    handleDetail({id}:number|any) {
+        this.$router.push({
+            name: 'Detail',
+            query:{
+                id:id
+            }
+        });
     }
-    handleDelete(index: string|number, row: string|number) {
-      console.log(index, row);
+
+    // 表格数据
+    async changeTable(params:object,) {
+        await this.getList(params);
+        this.tableData = this.list.list.rows;
+        this.page = this.list.list.count;
+    }
+    
+    // 状态查询
+    handleStatus() {
+        const search = {};
+        this.statusValue&&(search['status'] = Number(this.statusValue));
+        this.dateValue&&(search['date'] = this.dateValue);
+        search['page'] = 1;
+        this.changeTable(search);
+    }
+
+    // 输入查询
+    handleInput(){
+        const search = {};
+        this.searchData&&(search['id'] = Number(this.searchData));
+        search['page'] = 1;
+        this.changeTable(search);
+    }
+
+    // 日期查询
+    handleDate() {
+        const search = {};
+        this.statusValue&&(search['status'] = Number(this.statusValue));
+        this.dateValue&&(search['date'] = this.dateValue);
+        search['page'] = 1;
+        this.changeTable(search);
+    }
+
+    // 分页
+    handlePage(currentPage:number|string) {
+        const search = {};
+        this.pageCount = Number(currentPage);
+        this.statusValue&&(search['status'] = this.statusValue);
+        this.dateValue&&(search['date'] = this.dateValue);
+        this.searchData&&(search['id'] = Number(this.searchData));
+        search['page'] = Number(currentPage);
+        this.changeTable(search);
+    }
+    // 跳转到新增页
+    addTransaction() {
+        this.$router.push('/add')
+    }
+    
+    // 跳转到编辑页
+    handleEdit({id}:number|any) {
+        this.$router.push({
+            name: 'Edit',
+            query:{
+                id:id
+            }
+        })
+    }
+    // 删除
+    handleDelete({id}) {
+        id = (typeof id === 'number') ? id : Number(id);
+        this.$confirm('此操作将永久删除该选项, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(async () => {
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+                await this.deleteList({id});
+                this.handlePage(this.pageCount);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+            });          
+        });
     }
 }
 </script>
 <style lang="scss" scoped>
 .home {
     padding: 10px;
-    margin-top:10px;
-    border-top:3px solid #f3f3f3;
+    overflow: hidden;
     .search-content {
         width: 100%;
+        padding: 10px; 
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+        .block {
+            margin-left: 30px; 
+        }
+        .label {
+            color: rgba($color: #000000, $alpha: 0.5);
+            margin-right: 10px;
+        }
     }
     .home-btn {
         width: 100%;
         overflow: hidden;
-        margin-top:10px; 
         display: flex;
         .home-search{
             margin-left: auto; 

@@ -1,23 +1,33 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 const Home = () => import( "../views/Home.vue");
-const About = () => import( "../views/Home.vue");
+const Edit = () => import( "../views/Edit.vue");
 const NotFound = () => import( "../views/NotFound.vue");
 const Person = () => import( "../views/Person.vue");
 const Detail = () => import( "../views/Detail.vue");
 const Login = () => import( "../views/Login.vue");
+const Add = () => import( "../views/Add.vue");
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
+    redirect: '/home'
+  },
+  {
+    path: "/home",
     name: "Home",
     component: Home
   },
   {
-    path: "/about",
-    name: "About",
-    component: About
+    path: "/edit",
+    name: "Edit",
+    component: Edit
+  },
+  {
+    path: "/add",
+    name: "Add",
+    component: Add
   },
   {
     path: "/person",
