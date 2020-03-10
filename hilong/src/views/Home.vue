@@ -5,7 +5,7 @@
         type="primary" 
         size="small"
         @click="addTransaction"
-        class="home-el-btn">新增事务</el-button>
+        class="home-el-btn">新增事项</el-button>
         <el-input
             class="home-search"
             placeholder="请输入内容"
@@ -111,7 +111,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import axios from 'axios';
-import {tagStatusText, tagText, tagType, options,Search} from '../config'
+import {tagStatusText, tagText, tagType, options} from '../config'
 import Detail from './Detail.vue';
 import { Getter, Action } from 'vuex-class'
 

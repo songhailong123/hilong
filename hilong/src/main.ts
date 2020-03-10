@@ -8,6 +8,7 @@ import axios from 'axios';
 import Router from 'vue-router'
 
 Vue.config.productionTip = false;
+
 axios.defaults.baseURL = 'http://localhost:3000/'
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {

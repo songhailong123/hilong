@@ -70,8 +70,8 @@ export default class Detail extends Vue {
 <style lang="scss" scoped>
 .detail {
     width: 100%;
-    height: 100%;
-    background: url('../assets/b.jpg');
+    height: calc(100% - 100px);
+    background: url('../assets/s.png');
     background-size: cover;
     display: flex;
     justify-content: center;

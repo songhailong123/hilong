@@ -4,6 +4,21 @@ export enum tagStatusText {
     warning = 3,
     danger = 4 
 }
+export const getNowFormatDate = () => {
+    const date = new Date();
+    const seperator1 = "-";
+    const year = date.getFullYear();
+    let month:number|string = date.getMonth() + 1;
+    let strDate:number|string = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    const currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
+}
 
 export const options = [
     {

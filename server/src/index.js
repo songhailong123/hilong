@@ -74,6 +74,8 @@ app.get('/searchList', async (req,res) => {
             }
         }
     });
+    console.log(req.query);
+    console.log(where)
     const offset = (page-1)*limit;
     const list = await models.List.findAndCountAll({
         where:where,

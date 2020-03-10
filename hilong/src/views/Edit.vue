@@ -99,12 +99,23 @@ export default class Edit extends Vue {
     }
 
     async handleEdit(){
-        await this.update(this.detailData);
-        this.$message({
-           message: '恭喜你，修改成功',
-            type: 'success'
+        this.$confirm('确认修改该选项, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(async () => {
+                this.$message({
+                    type: 'success',
+                    message: '修改成功!'
+                });
+            await this.update(this.detailData);
+            this.$router.push('/');
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消修改'
+            });          
         });
-        this.$router.push('/');
     }
 
 }

@@ -7,6 +7,8 @@ const Person = () => import( "../views/Person.vue");
 const Detail = () => import( "../views/Detail.vue");
 const Login = () => import( "../views/Login.vue");
 const Add = () => import( "../views/Add.vue");
+const Analysis = () => import( "../views/Analysis.vue");
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -43,6 +45,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login
+  },
+  {
+    path: "/analysis",
+    name: "Analysis",
+    component: Analysis
   },
   {
     path: "/404",

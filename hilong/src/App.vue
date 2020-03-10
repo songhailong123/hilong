@@ -11,9 +11,11 @@
         background-color="#fff"
         text-color="#409eff"
         active-text-color="#1989fa">
-        <el-menu-item >事务管理系统</el-menu-item>
+        <el-menu-item >事项管理系统</el-menu-item>
         <el-menu-item index="0">首页</el-menu-item>
-        <el-menu-item index="1">新增事务</el-menu-item>
+        <el-menu-item index="1">新增事项</el-menu-item>
+        <el-menu-item index="3">数据分析</el-menu-item>
+
         <el-menu-item index="2" class="head-icon">
           <el-avatar icon="el-icon-user-solid"></el-avatar>
         </el-menu-item>
@@ -30,14 +32,25 @@ import { Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class App extends Vue {
-    activeIndex = '0'
+
+    get activeIndex() {
+        const routes = {
+            home:0,
+            add:1,
+            person:2,
+            analysis:3
+        }
+        const name = window.location.hash.split('/')[1];
+        const active = routes[name]+''
+        return active;
+    }
     @Watch('$route')
     showHead() {
         return this.$route.name !== 'Login' && this.$route.name !== 'NotFound'
     }
 
     handleSelect(key: any) {
-        const routeName = ['Home', 'Add', 'Person'];
+        const routeName = ['Home', 'Add', 'Person', 'Analysis'];
         (this as any).$router.push({name: routeName[key]})
     }
 }
