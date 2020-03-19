@@ -60,8 +60,7 @@ export default class Person extends Vue {
         const {passWord,headIcon} = this.user.user;
         this.model.passWord = passWord;
         this.model.userName = userName;
-        localStorage.setItem('headIcon',headIcon);
-        
+        this.model.headIcon = headIcon;
     }
 
     afterUpload(res) {
@@ -80,7 +79,7 @@ export default class Person extends Vue {
                     message: '修改成功!'
                 });
             await this.updateUser(this.model);
-            this.$router.push('/');
+            this.$router.go(0);
             }).catch(() => {
                 this.$message({
                     type: 'info',

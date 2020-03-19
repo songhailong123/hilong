@@ -55,8 +55,11 @@ export default class App extends Vue {
         return active;
     }
     headIcon = '';
-    async created () {
-        const headIcon = localStorage.getItem('headIcon');
+
+    async created() {
+        const userName = localStorage.getItem('user');
+        await this.getUser({userName});
+        const {headIcon} = this.user.user;
         this.headIcon = headIcon;
     }
 
