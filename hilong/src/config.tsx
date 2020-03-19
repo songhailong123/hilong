@@ -40,6 +40,7 @@ export const options = [
 ]
 
 export interface DetailData {
+    userName?:string;
     id?:number|string;
     date: string;
     name: string;

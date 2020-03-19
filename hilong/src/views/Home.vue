@@ -137,15 +137,17 @@ export default class Home extends Vue {
     dateValue = '';
     options = options;
     tableData = [];
+    userName = '';
     
     async created() {
         const userName = localStorage.getItem('user');
+        this.userName = userName;
         await this.getUser({userName});
         const {user} = this.user;
         if(!user.id){
             this.$router.push('/login')
         }
-        await this.getList({page:1});
+        await this.getList({userName,page:1});
         this.tableData = this.list.list.rows;
         this.page = this.list.list.count;
     }
@@ -171,7 +173,8 @@ export default class Home extends Vue {
 
     // 表格数据
     async changeTable(params:object,) {
-        await this.getList(params);
+        const userName = this.userName;
+        await this.getList({userName,...params});
         this.tableData = this.list.list.rows;
         this.page = this.list.list.count;
     }
@@ -228,6 +231,7 @@ export default class Home extends Vue {
     }
     // 删除
     handleDelete({id}) {
+        const userName = this.userName;
         id = (typeof id === 'number') ? id : Number(id);
         this.$confirm('此操作将永久删除该选项, 是否继续?', '提示', {
             confirmButtonText: '确定',
@@ -238,7 +242,7 @@ export default class Home extends Vue {
                     type: 'success',
                     message: '删除成功!'
                 });
-                await this.deleteList({id});
+                await this.deleteList({id,userName});
                 this.handlePage(this.pageCount);
             }).catch(() => {
                 this.$message({

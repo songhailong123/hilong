@@ -58,7 +58,9 @@ export default class Detail extends Vue {
     }
     
     async mounted() {
-        await  this.getDetail(this.$route.query);
+        const userName = localStorage.getItem('user');
+        const id = this.$route.query
+        await  this.getDetail({...id,userName});
         const {user} = this.detail;
         Object.keys(this.detailData).forEach(item => {
             this.detailData[item] = user[item]

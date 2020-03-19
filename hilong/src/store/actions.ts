@@ -14,6 +14,11 @@ const actions: ActionTree<RootStateTypes, any> = {
         const res = await axios.post('createUser',params);
         return res.data
     },
+    // 更新用户
+    async [types.UPDATE_USER]({ commit, state: RootStateTypes}, params: object) {
+        const res = await axios.post('updateUser',params);
+        return res.data
+    },
     // 查询列表
     async [types.GET_LIST]({ commit, state: RootStateTypes}, params: object) {
         const res = await axios.get('searchList',{params:params});

@@ -36,9 +36,10 @@ export default class Analysis extends Vue {
 
     async created() {
         const page = 1;
+        const userName = localStorage.getItem('user')
         const  date = getNowFormatDate();
-        this.search(this.value,{page});
-        this.search(this.dateValue,{page,date})
+        await this.search(this.value,{page,userName});
+        await this.search(this.dateValue,{page,date,userName});
         // number.forEach(async (item) => {
         //     const list = await this.getList({status:item,date,page});
         //     this.dateValue.push(list.list.count);
@@ -60,10 +61,10 @@ export default class Analysis extends Vue {
     drawLine2() {
         // 基于准备好的dom，初始化echarts实例
         const analysis2 = echarts.init(document.getElementById('analysis2'));
-        const date = this.dateValue;
 
         // 绘制图表
         setTimeout(()=>{
+            const date = this.dateValue;
             analysis2.setOption({
                 color: ['#3398DB'],
                 tooltip: {
@@ -81,7 +82,7 @@ export default class Analysis extends Vue {
                 xAxis: [
                     {
                         type: 'category',
-                        data: ['已完成', '待进行', '进行中', '已删除'],
+                        data: ['已完成', '已删除', '进行中', '待进行'],
                         axisTick: {
                             alignWithLabel: true
                         }

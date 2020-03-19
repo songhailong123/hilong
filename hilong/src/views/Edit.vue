@@ -89,7 +89,9 @@ export default class Edit extends Vue {
     }
 
     async mounted() {
-        await  this.getDetail(this.$route.query);
+        const userName = localStorage.getItem('user');
+        const id = this.$route.query
+        await  this.getDetail({...id,userName});
         const {user} = this.detail;
         Object.keys(this.detailData).forEach(item => {
             item === 'status' 

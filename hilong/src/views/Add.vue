@@ -59,12 +59,17 @@ export default class Add extends Vue {
     // 状态列表
     options = options;
     detailData: DetailData = {
+        userName:'',
         date: '',
         name: '啊嘿啊嘿嘿啊',
         status: '',
         describe: '啊哈哈哈哈哈哈哈哈哈哈哈'
     }
 
+    created() {
+        this.detailData.userName = localStorage.getItem('user');
+    }
+    
     tagText(status:number) {
         return tagText(status);
     }

@@ -2,13 +2,14 @@ const express = require('express');
 const bodyParse = require('body-parser');
 const morgan = require('morgan');
 const models = require('../models');//模型对象
-
+const multer  = require('multer');
 // models.user.....
 // models.Sequelize 静态类
 // models.sequelize 实例对象
 const app = express();
 app.use(bodyParse.json());
 app.use(morgan("combined"));
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 
 //设置跨域访问
@@ -24,6 +25,14 @@ app.all("*",function(req,res,next){
     else
         next();
 })
+
+const upload = multer({dest: __dirname + '/uploads'})
+app.post('/upload',upload.single('file'), async (req, res) => {
+  const file = req.file
+  file.url = `http://localhost:3000/uploads/${file.filename}`
+  res.send(file)
+})
+
 //查找用户是否已存在
 app.post('/findUser', async(req, res) => {
     const { userName } = req.body;
@@ -48,7 +57,26 @@ app.post('/createUser', async (req, res) => {
     res.json({
         message:'success',
     })
-})
+});
+// 用户修改密码
+app.post('/updateUser', async (req, res) => {
+    const { userName, passWord,headIcon} = req.body;
+    const user = await models.User.update(
+        {
+            passWord,
+            headIcon
+        },
+        {
+            where:{
+                userName
+            }
+        }
+    );
+    res.json({
+        message:'success',
+    })
+});
+
 // 添加列表
 app.get('/addList', async (req,res) => {
     const detailData = req.query;
@@ -67,7 +95,7 @@ app.get('/searchList', async (req,res) => {
     const limit = 10;
     Object.keys(req.query).forEach(item => {
         if (item !== 'page'){
-            if(item === 'date'){
+            if(item === 'date' || item === 'userName'){
                 where[item] = req.query[item];
             } else {
                 where[item] = Number(req.query[item]);
@@ -87,10 +115,11 @@ app.get('/searchList', async (req,res) => {
 });
 // 查询详情
 app.get('/detail', async (req,res) => {
-    const {id} = req.query;
+    const {id,userName} = req.query;
     const user = await models.List.findOne({
         where:{
-            id
+            id,
+            userName
         }
     });
     res.send({
@@ -101,12 +130,13 @@ app.get('/detail', async (req,res) => {
 
 // 更新列表
 app.post('/updateList', async (req, res) => {
-    const {id} = req.body;
+    const {id,userName} = req.body;
     const list = await models.List.update(
         req.body,
         {
             where:{
-                id
+                id,
+                userName
             }
     });
     res.json({
@@ -116,10 +146,11 @@ app.post('/updateList', async (req, res) => {
 
 // 删除列表
 app.get('/deleteList', async (req,res) => {
-    const {id} = req.query;
+    const {id,userName} = req.query;
     const user = await models.List.destroy({
         where:{
-            id
+            id,
+            userName
         }
     });
     res.send({
