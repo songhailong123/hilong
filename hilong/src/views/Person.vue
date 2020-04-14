@@ -14,16 +14,19 @@
             <span>密码: </span>
             <el-input show-password v-model="model.passWord" placeholder="请输入内容" class="detail-item-input"></el-input>
         </div>
-
-        <el-upload
+        <div class="detail-item" style="display:flex;align-items:center;">
+            <span>头像:</span>
+            <el-upload
             class="avatar-uploader"
             action="http://localhost:3000/upload"
             :show-file-list="false"
             :on-success="afterUpload"
-        >
+            style="margin-left:20px"
+            >
             <img v-if="model.headIcon" :src="model.headIcon" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </div>
         <div class="add-btn">
             <el-button type="primary" size="small" @click="handleEdit">确定修改</el-button>
         </div>

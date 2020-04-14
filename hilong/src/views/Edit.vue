@@ -110,7 +110,8 @@ export default class Edit extends Vue {
                     type: 'success',
                     message: '修改成功!'
                 });
-            await this.update(this.detailData);
+            const userName = localStorage.getItem('user');
+            await this.update({...this.detailData,userName});
             this.$router.push('/');
             }).catch(() => {
                 this.$message({

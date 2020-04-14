@@ -2,7 +2,7 @@
   <div class="analysis">
       <!-- <h1 >------事务数据展示-----</h1> -->
       <el-alert
-        title=" 展示当前事项完成情况和今日事项，统计数据在图表下方"
+        title=" 展示当前事项完成情况和今日事项，统计数据见下方图表"
         type="warning"
         style="margin-bottom:20px;"
         :closable="false"
